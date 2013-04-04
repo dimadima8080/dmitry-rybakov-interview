@@ -4,39 +4,46 @@
 #include "taskpool.h"
 
 // Task pool implementation
-TaskPool::TaskPool(const std::vector<Task>& aTasks, int aProcessorsCount)
+TaskPool::TaskPool(std::vector<shared_ptr<Task> >& aTasks, int aProcessorsCount)
 {
-    const std::vector<Task>::iterator it = aTasks.begin();
+    std::vector<shared_ptr<Task> >::iterator it = aTasks.begin();
     for(; it != aTasks.end(); it++)
-       taskProcessors.push_back(TaskProcessor(*it));
+    {
+        taskProcessors.push_back(shared_ptr<TaskProcessor>(new TaskProcessor(*it)));
+    }
+}
+
+TaskPool::~TaskPool()
+{
+    waitForDone();
 }
 
 void TaskPool::start()
 {
-    std::vector<TaskProcessor>::iterator it = taskProcessors.begin();
+    std::vector<shared_ptr<TaskProcessor> >::iterator it = taskProcessors.begin();
     for(; it != taskProcessors.end(); it++)
-        (*it).start();
+        (*it)->start();
 }
 
 void TaskPool::waitForDone()
 {
-    std::vector<TaskProcessor>::iterator it = taskProcessors.begin();
+    std::vector<shared_ptr<TaskProcessor> >::iterator it = taskProcessors.begin();
     for(; it != taskProcessors.end(); it++)
-        (*it).join();
+        (*it)->wait();
 }
 
-TaskProcessor::TaskProcessor(std::shared_ptr<Task> aTask)
+TaskProcessor::TaskProcessor(shared_ptr<Task> aTask)
 {
     assignTask(aTask);
 }
 
 // Task Processor implementation
-void TaskProcessor::assignTask(std::shared_ptr<Task> aTask)
+void TaskProcessor::assignTask(shared_ptr<Task> aTask)
 {
     task = aTask;
 }
 
 void TaskProcessor::run()
 {
-    task.executeTask();
+    task->executeTask();
 }

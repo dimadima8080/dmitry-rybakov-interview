@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET = interview_test
 DEPENDPATH += .
 INCLUDEPATH += .
 
@@ -13,4 +13,7 @@ HEADERS += Task.h \
 SOURCES += main.cpp Task.cpp \
     taskpool.cpp
 
-
+CONFIG += console
+CONFIG -= app_bundle
+QT     += core
+QT     -= gui
