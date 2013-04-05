@@ -23,13 +23,13 @@ public slots:
         std::cout << "starting up..." << std::endl;
 
         int total_time = 0;
-        std::vector<shared_ptr<Task> > tasks;
+        TTaskArray tasks;
 
         for(int i = 0; i < TASKS_COUNT; i++)
         {
             int sleep_time = (qrand() % 3 + 1) * 1000;
             total_time += sleep_time;
-            tasks.push_back(shared_ptr<Task>(new ConcreteTask(sleep_time)));
+            tasks.push_back(QSharedPointer<Task>(new ConcreteTask(sleep_time)));
         }
 
         {

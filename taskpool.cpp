@@ -4,12 +4,12 @@
 #include "taskpool.h"
 
 // Task pool implementation
-TaskPool::TaskPool(std::vector<shared_ptr<Task> >& aTasks, int /*aProcessorsCount*/)
+TaskPool::TaskPool(TTaskArray& aTasks, int /*aProcessorsCount*/)
 {
-    std::vector<shared_ptr<Task> >::iterator it = aTasks.begin();
+    TTaskArray::iterator it = aTasks.begin();
     for(; it != aTasks.end(); it++)
     {
-        taskProcessors.push_back(shared_ptr<TaskProcessor>(new TaskProcessor(*it)));
+        taskProcessors.push_back(QSharedPointer<TaskProcessor>(new TaskProcessor(*it)));
     }
 }
 
@@ -20,25 +20,25 @@ TaskPool::~TaskPool()
 
 void TaskPool::start()
 {
-    std::vector<shared_ptr<TaskProcessor> >::iterator it = taskProcessors.begin();
+    TTaskProcessorArray::iterator it = taskProcessors.begin();
     for(; it != taskProcessors.end(); it++)
         (*it)->start();
 }
 
 void TaskPool::waitForDone()
 {
-    std::vector<shared_ptr<TaskProcessor> >::iterator it = taskProcessors.begin();
+    TTaskProcessorArray::iterator it = taskProcessors.begin();
     for(; it != taskProcessors.end(); it++)
         (*it)->wait();
 }
 
-TaskProcessor::TaskProcessor(shared_ptr<Task> aTask)
+TaskProcessor::TaskProcessor(QSharedPointer<Task> aTask)
 {
     assignTask(aTask);
 }
 
 // Task Processor implementation
-void TaskProcessor::assignTask(shared_ptr<Task> aTask)
+void TaskProcessor::assignTask(QSharedPointer<Task> aTask)
 {
     task = aTask;
 }

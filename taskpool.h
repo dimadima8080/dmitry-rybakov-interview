@@ -3,34 +3,39 @@
 
 #include <QThread>
 #include <vector>
-#include <tr1/memory>
+#include <QSharedPointer>
 
 #include "task.h"
 
 using namespace std;
-using namespace std::tr1;
 
 const int TASK_PROCESSOR_THREADS = 10;
+
+class Task;
+class TaskProcessor;
+
+typedef std::vector<QSharedPointer<Task> > TTaskArray;
+typedef std::vector<QSharedPointer<TaskProcessor> > TTaskProcessorArray;
 
 class TaskProcessor: public QThread
 {
     Q_OBJECT
 public:
-    TaskProcessor(shared_ptr<Task> aTask);
+    TaskProcessor(QSharedPointer<Task> aTask);
 
-    void assignTask(shared_ptr<Task> aTask);
+    void assignTask(QSharedPointer<Task> aTask);
 
 protected:
     void run();
 
 private:
-    shared_ptr<Task> task;
+    QSharedPointer<Task> task;
  };
 
 class TaskPool
 {
 public:
-    TaskPool(vector<shared_ptr<Task> >& aTasks, int aProcessorsCount = TASK_PROCESSOR_THREADS);
+    TaskPool(TTaskArray& aTasks, int aProcessorsCount = TASK_PROCESSOR_THREADS);
     ~TaskPool();
 
     void start();
@@ -38,7 +43,7 @@ public:
     void waitForDone();
 
 private:
-    vector<shared_ptr<TaskProcessor> > taskProcessors;
+    TTaskProcessorArray taskProcessors;
 };
 
 #endif // TASKPOOL_H
