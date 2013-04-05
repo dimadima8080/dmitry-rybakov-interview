@@ -1,5 +1,4 @@
 #include <vector>
-#include <tr1/memory>
 #include <iostream>
 
 #include <QtCore/QCoreApplication>
