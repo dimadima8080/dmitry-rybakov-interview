@@ -10,6 +10,8 @@
 using namespace std;
 using namespace std::tr1;
 
+const int TASK_PROCESSOR_THREADS = 10;
+
 class TaskProcessor: public QThread
 {
     Q_OBJECT
@@ -28,7 +30,7 @@ private:
 class TaskPool
 {
 public:
-    TaskPool(vector<shared_ptr<Task> >& aTasks, int aProcessorsCount = 1);
+    TaskPool(vector<shared_ptr<Task> >& aTasks, int aProcessorsCount = TASK_PROCESSOR_THREADS);
     ~TaskPool();
 
     void start();

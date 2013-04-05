@@ -11,14 +11,17 @@
  * the amount of time a task should wait in executeTask.
  */
 
-struct Task {
+struct Task
+{
     virtual void executeTask() = 0;
 
     int _milliseconds;
 };
 
-struct ConcreteTask: public Task {
+struct ConcreteTask: public Task
+{
     ConcreteTask(int spin_time) { _milliseconds = spin_time; }
+
     void executeTask();
 };
 

@@ -4,7 +4,7 @@
 #include "taskpool.h"
 
 // Task pool implementation
-TaskPool::TaskPool(std::vector<shared_ptr<Task> >& aTasks, int aProcessorsCount)
+TaskPool::TaskPool(std::vector<shared_ptr<Task> >& aTasks, int /*aProcessorsCount*/)
 {
     std::vector<shared_ptr<Task> >::iterator it = aTasks.begin();
     for(; it != aTasks.end(); it++)

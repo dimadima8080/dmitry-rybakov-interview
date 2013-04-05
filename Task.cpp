@@ -1,6 +1,6 @@
 #include <QThread>
-#include <QApplication>
 #include <QTime>
+#include <QtCore/QCoreApplication>
 
 #include "Task.h"
 
@@ -12,12 +12,14 @@ QMutex g_counterMutex;
 static void delay(int milliseconds)
 {
     QTime dieTime= QTime::currentTime().addMSecs(milliseconds);
+    // Give execution time to the system
     while( QTime::currentTime() < dieTime )
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 void ConcreteTask::executeTask()
 {
+    // Use mutex to be thread safe
     g_counterMutex.lock();
     g_counter++;
     g_counterMutex.unlock();
