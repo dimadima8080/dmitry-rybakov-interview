@@ -17,33 +17,40 @@ class TaskProcessor;
 typedef std::vector<QSharedPointer<Task> > TTaskArray;
 typedef std::vector<QSharedPointer<TaskProcessor> > TTaskProcessorArray;
 
-class TaskProcessor: public QThread
-{
-    Q_OBJECT
-public:
-    TaskProcessor(QSharedPointer<Task> aTask);
-
-    void assignTask(QSharedPointer<Task> aTask);
-
-protected:
-    void run();
-
-private:
-    QSharedPointer<Task> task;
- };
-
 class TaskPool
 {
 public:
-    TaskPool(TTaskArray& aTasks, int aProcessorsCount = TASK_PROCESSOR_THREADS);
+    TaskPool(TTaskArray& aTasks, size_t aProcessorsCount = TASK_PROCESSOR_THREADS);
     ~TaskPool();
 
     void start();
 
     void waitForDone();
 
+    QSharedPointer<Task> getNextTask();
+
 private:
-    TTaskProcessorArray taskProcessors;
+    TTaskProcessorArray  taskProcessors;
+    TTaskArray::iterator taskNextIt;
+    TTaskArray::iterator taskNextEndIt;
+    QMutex				 taskNextItMutex;
+};
+
+class TaskProcessor: public QThread
+{
+    Q_OBJECT
+public:
+    TaskProcessor(TaskPool& aTaskPool);
+
+protected:
+    void run();
+
+private:
+    void assignTask(QSharedPointer<Task> aTask);
+
+private:
+    QSharedPointer<Task>    task;
+    TaskPool&               taskPool;
 };
 
 #endif // TASKPOOL_H

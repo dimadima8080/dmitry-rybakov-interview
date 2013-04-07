@@ -16,27 +16,135 @@ class TaskFinish : public QObject
 public:
     TaskFinish(QObject *parent = 0) : QObject(parent) {}
 
+private:
+
+    TTaskArray createTaskArray(int count, int& totalTime)
+    {
+        TTaskArray tasks;
+        for(int i = 0; i < count; i++)
+        {
+            int sleepTime = (qrand() % 3 + 1) * 1000;
+            totalTime += sleepTime;
+            tasks.push_back(QSharedPointer<Task>(new ConcreteTask(sleepTime, i)));
+        }
+
+        return tasks;
+    }
+
+    void printResult(int counter, int totalTime)
+    {
+        if (counter > 0)
+            std::cout << "global count: ["<< counter << "]   avarage time is: ["<< totalTime / counter / 1000.0f << " seconds]" << std::endl;
+    }
+
+    void printTestResult(bool passed, int tasksCount)
+    {
+        std::cout << "test with tasks count " << tasksCount << " ";
+        if (passed)
+            std::cout << "passed" << std::endl;
+        else
+            std::cout << "failed" << std::endl;
+    }
+
+    bool unitTest1()
+    {
+        int totalTime = 0;
+        int tasksCount = 0;
+        TTaskArray tasks = createTaskArray(tasksCount, totalTime);
+
+        {
+            TaskPool pool(tasks);
+            g_counter = 0;
+            pool.start();
+        }
+
+        printResult(g_counter, totalTime);
+
+        printTestResult(g_counter == tasksCount, tasksCount);
+
+        return g_counter == tasksCount;
+    }
+
+    bool unitTest2()
+    {
+        int totalTime = 0;
+        int tasksCount = 9;
+        TTaskArray tasks = createTaskArray(tasksCount, totalTime);
+
+        {
+            TaskPool pool(tasks);
+            g_counter = 0;
+            pool.start();
+        }
+
+        printResult(g_counter, totalTime);
+
+        printTestResult(g_counter == tasksCount, tasksCount);
+
+        return g_counter == tasksCount;
+    }
+
+    bool unitTest3()
+    {
+        int totalTime = 0;
+        int tasksCount = 10;
+        TTaskArray tasks = createTaskArray(tasksCount, totalTime);
+
+        {
+            TaskPool pool(tasks);
+            g_counter = 0;
+            pool.start();
+        }
+
+        printResult(g_counter, totalTime);
+
+        printTestResult(g_counter == tasksCount, tasksCount);
+
+        return g_counter == tasksCount;
+    }
+
+    bool unitTest4()
+    {
+        int totalTime = 0;
+        int tasksCount = 100;
+        TTaskArray tasks = createTaskArray(tasksCount, totalTime);
+
+        {
+            TaskPool pool(tasks);
+            g_counter = 0;
+            pool.start();
+        }
+
+        printResult(g_counter, totalTime);
+
+        printTestResult(g_counter == tasksCount, tasksCount);
+
+        return g_counter == tasksCount;
+    }
+
 public slots:
+
     void run()
     {
         std::cout << "starting up..." << std::endl;
 
-        int total_time = 0;
-        TTaskArray tasks;
+#ifdef UNIT_TEST_ENABLED
+        unitTest1();
+        unitTest2();
+        unitTest3();
+        unitTest4();
+#endif
 
-        for(int i = 0; i < TASKS_COUNT; i++)
-        {
-            int sleep_time = (qrand() % 3 + 1) * 1000;
-            total_time += sleep_time;
-            tasks.push_back(QSharedPointer<Task>(new ConcreteTask(sleep_time)));
-        }
+        int totalTime = 0;
+        TTaskArray tasks = createTaskArray(TASKS_COUNT, totalTime);
 
         {
             TaskPool pool(tasks);
+            g_counter = 0;
             pool.start();
         }
 
-        std::cout << "global count: ["<< g_counter << "]   avarage time is: ["<< total_time / g_counter / 1000.0f << " seconds]" << std::endl;
+        printResult(g_counter, totalTime);
 
         emit finished();
     }

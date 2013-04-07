@@ -13,14 +13,17 @@
 
 struct Task
 {
+    virtual ~Task() {}
     virtual void executeTask() = 0;
 
     int _milliseconds;
+    int _no;
 };
 
 struct ConcreteTask: public Task
 {
-    ConcreteTask(int spin_time) { _milliseconds = spin_time; }
+    ~ConcreteTask() {}
+    ConcreteTask(int spin_time, int no) { _milliseconds = spin_time; _no = no;}
 
     void executeTask();
 };
