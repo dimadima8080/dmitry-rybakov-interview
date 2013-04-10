@@ -1,20 +1,26 @@
-Build envorinment
+#Build envorinment
 1. Qt SDK 4.8 or higher with GCC tool chain, Windows 7 and Qt Creator if it is convinient for you
-2. To produce make files use qmake dmitry-rybakov-interview.pro
-3. To build this project:
-     Install Qt Creator
-          1. Run QtQreator
-          2. Tap File->Open File or Project and choose dmitry-rybakov-interview.pro
-          3. Press run button to start application
-     Using command line:
-          2. Run qmake dmitry-rybakov-interview.pro in command line console window
-          2. Run make to build application
-          3. To tun application type rdv_interview and press enter in the console
 
-Improvements to be done:
+#Build this project
+##Using QtCreator
+1. Install Qt Creator
+2. Run QtQreator
+3. Tap File->Open File or Project and choose dmitry-rybakov-interview.pro
+4. Press run button to start application
+
+##Using command line
+1. Run qmake dmitry-rybakov-interview.pro in command line console window
+2. Run make to build application
+3. To tun application type rdv_interview and press enter in the console
+
+#Improvements to be done
 1. Add priority for each task to process important tasks earlier
 2. Add notification event about task done to the user code
 3. Implement heuristic to determine optimal count of threads for particular system
+
+
+
+
 
 
 
